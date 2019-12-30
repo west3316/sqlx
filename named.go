@@ -165,6 +165,11 @@ func bindArgs(names []string, arg interface{}, m *reflectx.Mapper) ([]interface{
 		v = v.Elem()
 	}
 
+	argm, ok := v.Interface().(map[string]interface{})
+	if ok {
+		return bindMapArgs(names, argm)
+	}
+
 	err := m.TraversalsByNameFunc(v.Type(), names, func(i int, t []int) error {
 		if len(t) == 0 {
 			return fmt.Errorf("could not find name %s in %#v", names[i], arg)
